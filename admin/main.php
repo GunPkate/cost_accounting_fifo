@@ -17,9 +17,24 @@
 </head>
 <body>
 
-<div class="card text-center" style="padding:15px;">
-  <h4>Student System <a href="../logout.php">Log out</a> </h4>
-</div><br>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <h4 class="navbar-brand">Product System </h4>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+       <h5><a class="nav-link active" aria-current="page" href="./main.php">Home</a></h5>
+       <h5><a class="nav-link" href="#">Features</a></h5>
+       <h5><a class="nav-link" href="#">Pricing</a></h5>
+       <h5><a class="nav-link" href="../logout.php">Log out</a> </h5>
+       <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
 <?php         
   $strKeyword = null;
   if(isset($_POST['txt'])){
@@ -33,7 +48,7 @@
       <input name="txt" type="text" value="<?=$strKeyword?>"/>
       <input type="submit"/>
     </form>
-    <a href="./insert_stu.php" class="btn btn-primary" style="float:right;">Add New Record</a>
+    <a href="./insert_product.php" class="btn btn-primary" style="float:right;">Add New Record</a>
     </h4><br>
   <table class="table table-hover">
     <thead>
@@ -51,10 +66,10 @@
 
 include("./config_fifo.php");
 
-// $str = "select * from product where p_name like '%$strKeyword%' ";
+//No left No value for new product
 $str = "select p.id, p.p_name, img,sum(pc.qty)-sum(ps.qty) as stock ,sum(pc.qty)-sum(pc.qty) as inventory from product p"
-."  join product_cost pc on p.id = pc.p_id "
-."  join product_sale ps on p.id = ps.p_id "
+." left join product_cost pc on p.id = pc.p_id "
+." left join product_sale ps on p.id = ps.p_id "
 ."where p_name like '%$strKeyword%' group by p.id ";
 
 // $str = "select p.id, p.p_name, img, sum(pc.cost_per_unit*pc.qty) as inventory from product p"
@@ -65,7 +80,7 @@ $obj = mysqli_query($conn,$str);
 
 $Num_Rows = mysqli_num_rows($obj);
 
-$Per_Page = 2;   // Per Page
+$Per_Page = 5;   // Per Page
 
 $Page = isset($_GET["Page"]) ? $_GET['Page'] : '';
 if($Page == ''){ $Page=1; }
