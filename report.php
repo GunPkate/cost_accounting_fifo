@@ -37,7 +37,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-       <h5><a class="nav-link active" aria-current="page" href="./main.php">Home</a></h5>
+       <h5><a class="nav-link active" aria-current="page" href="./admin/main.php">Home</a></h5>
        <h5><a class="nav-link" href="#">Features</a></h5>
        <h5><a class="nav-link" href="../report.php">Report</a></h5>
        <h5><a class="nav-link" href="../logout.php">Log out</a> </h5>
