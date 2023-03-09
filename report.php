@@ -29,9 +29,23 @@
       background: linear-gradient(to bottom, #f9bc2c, #ee821a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */      
     }
 </style>
-<div class="card text-center" style="padding:15px;">
-  <h4>Profit Loss Statement <a href="../logout.php">Log out</a> </h4>
-</div><br>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <h4 class="navbar-brand">Product System </h4>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+       <h5><a class="nav-link active" aria-current="page" href="./main.php">Home</a></h5>
+       <h5><a class="nav-link" href="#">Features</a></h5>
+       <h5><a class="nav-link" href="../report.php">Report</a></h5>
+       <h5><a class="nav-link" href="../logout.php">Log out</a> </h5>
+       <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </div>
+    </div>
+  </div>
+</nav>
 
 <div class="container">
   <h4>
