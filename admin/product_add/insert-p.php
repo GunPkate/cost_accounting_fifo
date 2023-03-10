@@ -23,7 +23,7 @@ if($filename != ""){
 //echo $pname1."<br>".$lname1;
 include("../config_fifo.php");
 
-$str = "INSERT INTO product (p_name,img) VALUES('$pname1','$dstfile')";
+$str = "INSERT INTO product (p_name,img) VALUES('$pname1',SUBSTRING('$dstfile',4))";
 $obj = mysqli_query($conn,$str);
     if($obj) {
         echo "Record add successfully";

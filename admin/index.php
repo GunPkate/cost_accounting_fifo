@@ -121,9 +121,9 @@ $obj  = mysqli_query($conn,$str);
             '<td>'.$row['inventory'].'</td>';
 ?>
                     <td>
-                        <a href="edit_stu.php?edit=<?php echo $row['id']?>" style="color:green"> <!--param edit-->
+                        <a href="./product_add/edit_product.php?edit=<?php echo $row['id']?>" style="color:green"> <!--param edit-->
                         <i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp
-                        <a href="delete_stu.php?del=<?php echo $row['id']?>" style="color:red" onclick="return confirm('Are you sure want to delete this record <?= $row['id']?>')">
+                        <a href="./product_add/delete_product.php?del=<?php echo $row['id']?>" style="color:red" onclick="return confirm('Are you sure want to delete this record <?= $row['id']?>')">
                         <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </td>
