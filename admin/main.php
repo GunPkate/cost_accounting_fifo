@@ -48,7 +48,7 @@
       <input name="txt" type="text" value="<?=$strKeyword?>"/>
       <input type="submit"/>
     </form>
-    <a href="./insert_product.php" class="btn btn-primary" style="float:right;">Add New Record</a>
+    <a href="./product_add/insert_product.php" class="btn btn-primary" style="float:right;">Add Product</a>
     </h4><br>
   <table class="table table-hover">
     <thead>
