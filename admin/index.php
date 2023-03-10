@@ -57,7 +57,7 @@
         <th>Image</th>
         <th>Name</th>
         <th>Stock</th>
-        <th>Inventory</th>
+        <th>Average Cost / Unit</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -68,13 +68,9 @@ include("./config_fifo.php");
 
 //No left No value for new product
 $str = "select p.id, p.p_name, img,sum(pc.qty)-sum(ps.qty) as stock ,sum(pc.qty)-sum(pc.qty) as inventory from product p"
-." left join product_cost pc on p.id = pc.p_id "
-." left join product_sale ps on p.id = ps.p_id "
+."  join product_cost pc on p.id = pc.p_id "
+."  join product_sale ps on p.id = ps.p_id "
 ."where p_name like '%$strKeyword%' group by p.id ";
-
-// $str = "select p.id, p.p_name, img, sum(pc.cost_per_unit*pc.qty) as inventory from product p"
-// ."  join product_cost pc on p.id = pc.p_id "
-// ."where p_name like '%$strKeyword%' group by p.id ";
 
 $obj = mysqli_query($conn,$str);
 
@@ -108,17 +104,59 @@ $str .=" order by id ASC LIMIT $Page_Start , $Per_Page";
 $obj  = mysqli_query($conn,$str);
 //page END
 
+function getCost($p_id){
+  // pass params from outside
+  global $conn;
+
+  $str2 = " select * from product_cost pc where p_id like '%$p_id%' order by date desc"; 
+  $obj2 = mysqli_query($conn,$str2);
+  
+  $str3 = " select sum(qty) as qty from product_sale ps where p_id like '%$p_id%'"; 
+  $obj3 = mysqli_query($conn,$str3);
+  
+   calCost($obj2,$obj3);
+}
+
+function calCost($cost,$sale){
+  // $sale_count = 0;
+  // while($sale_qty = mysqli_fetch_array($sale)){
+    //   $sale_count = $sale_qty['qty'];
+    //   echo  $sale_count." "."<br>";
+    // }
+    
+    $avg_cost = 0;
+    $cost_qty = 0;
+    while($cost_row = mysqli_fetch_array($cost)){ 
+      $avg_cost += $cost_row['qty']*$cost_row['cost_per_unit'];
+      $cost_qty += $cost_row['qty'];
+      // echo  $cost_row['qty']." ".$cost_row['date']."<br>";
+  }
+  // echo $avg_cost."<br>";
+  // echo $cost_qty."<br>";
+  // echo ($avg_cost/$cost_qty)."<br>";
+  $result = null;
+  $avg_cost > 0 && $cost_qty > 0? $result = ($avg_cost/$cost_qty) : $result;
+  echo $result."<br>";
+  return $result;
+}
+
     $ya = 0;
     while($row = mysqli_fetch_array($obj)){
         $ya++;
-        echo'<tr>'.
-            // '<td>'.$ya.'</td>'.
-            // '<td>'.'<img src="img/test1.jpg">'.'</td>'.
-            '<td>'.$row['id'].'</td>'.
-            '<td>'.'<img style="width:300px" src="'.$row['img'].'"></td>'.
-            '<td>'.$row['p_name'].'</td>'.
-            '<td>'.$row['stock'].'</td>'.
-            '<td>'.$row['inventory'].'</td>';
+        $cost_wa = 0;
+        // echo $row['id']." aa ";
+
+        $cost_wa =  strval(getCost($row['id']));
+        if($row['stock'] > 0){
+          echo
+          '<tr>'.
+          '<td>'.$ya.'</td>'.
+          '<td>'.'<img style="width:300px" src="'.$row['img'].'"></td>'.
+          '<td>'.$row['p_name'].'</td>'.
+          '<td>'.$row['stock'].'</td>'.
+          '<td>'.$cost_wa.'</td>';  //query from product_cost where p_id = $row['id']  if() avg or 
+        }
+
 ?>
                     <td>
                         <a href="./product_add/edit_product.php?edit=<?php echo $row['id']?>" style="color:green"> <!--param edit-->
