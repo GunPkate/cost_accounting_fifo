@@ -56,9 +56,10 @@
         <th>Id</th>
         <th>Image</th>
         <th>Name</th>
+        <th>Buy</th>
+        <th>Sale</th>
         <th>Stock</th>
-        <th>Average Cost / Unit</th>
-        <th>Action</th>
+        <th class="text-center">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -67,10 +68,16 @@
 include("./config_fifo.php");
 
 //No left No value for new product
-$str = "select p.id, p.p_name, img,sum(pc.qty)-sum(ps.qty) as stock ,sum(pc.qty)-sum(pc.qty) as inventory from product p"
+$str = "select p.id, p.p_name, img,"
+." COALESCE(sum(pc.qty),0) buy," 
+." COALESCE(sum(ps.qty),0) sale,"
+." COALESCE(sum(pc.qty)-sum(ps.qty),'Sold out') stock "
+."  from product p"
 ." left join product_cost pc on p.id = pc.p_id "
 ." left join product_sale ps on p.id = ps.p_id "
 ."where p_name like '%$strKeyword%' group by p.id ";
+
+
 
 $obj = mysqli_query($conn,$str);
 
@@ -104,52 +111,52 @@ $str .=" order by id ASC LIMIT $Page_Start , $Per_Page";
 $obj  = mysqli_query($conn,$str);
 //page END
 
-function getCost($p_id){
-  global $conn;
-  // $p_id = 1  ;
-  $str2 = " select * from product_cost pc where p_id like '%$p_id%' order by date desc"; 
-  $obj2 = mysqli_query($conn,$str2);
+// function getCost($p_id){
+//   global $conn;
+//   // $p_id = 1  ;
+//   $str2 = " select * from product_cost pc where p_id like '%$p_id%' order by date desc"; 
+//   $obj2 = mysqli_query($conn,$str2);
   
-  $str3 = " select sum(qty) as qty from product_sale ps where p_id like '%$p_id%'"; 
-  $obj3 = mysqli_query($conn,$str3);
+//   $str3 = " select sum(qty) as qty from product_sale ps where p_id like '%$p_id%'"; 
+//   $obj3 = mysqli_query($conn,$str3);
   
-  // while($sale_qty = mysqli_fetch_array($obj3)){ 
-    //   echo  $sale_qty['qty']." "."<br>";
-    // }
+//   // while($sale_qty = mysqli_fetch_array($obj3)){ 
+//     //   echo  $sale_qty['qty']." "."<br>";
+//     // }
     
-    //WA weighted average
-    calCost($obj2,$obj3);
-}
+//     //WA weighted average
+//     calCost($obj2,$obj3);
+// }
 
-function calCost($cost,$sale){
-  // $sale_count = 0;
-  // while($sale_qty = mysqli_fetch_array($sale)){
-    //   $sale_count = $sale_qty['qty'];
-    //   echo  $sale_count." "."<br>";
-    // }
+// function calCost($cost,$sale){
+//   // $sale_count = 0;
+//   // while($sale_qty = mysqli_fetch_array($sale)){
+//     //   $sale_count = $sale_qty['qty'];
+//     //   echo  $sale_count." "."<br>";
+//     // }
     
-    $avg_cost = 0;
-    $cost_qty = 0;
-    while($cost_row = mysqli_fetch_array($cost)){ 
-      $avg_cost += $cost_row['qty']*$cost_row['cost_per_unit'];
-      $cost_qty += $cost_row['qty'];
-      // echo  $cost_row['qty']." ".$cost_row['date']."<br>";
-  }
-  // echo $avg_cost."<br>";
-  // echo $cost_qty."<br>";
-  // echo ($avg_cost/$cost_qty)."<br>";
-  $result = null;
-  $avg_cost > 0 && $cost_qty > 0? $result = ($avg_cost/$cost_qty) : $result;
-  echo $result."<br>";
-  return $result;
-}
+//     $avg_cost = 0;
+//     $cost_qty = 0;
+//     while($cost_row = mysqli_fetch_array($cost)){ 
+//       $avg_cost += $cost_row['qty']*$cost_row['cost_per_unit'];
+//       $cost_qty += $cost_row['qty'];
+//       // echo  $cost_row['qty']." ".$cost_row['date']."<br>";
+//   }
+//   // echo $avg_cost."<br>";
+//   // echo $cost_qty."<br>";
+//   // echo ($avg_cost/$cost_qty)."<br>";
+//   $result = null;
+//   $avg_cost > 0 && $cost_qty > 0? $result = ($avg_cost/$cost_qty) : $result;
+//   echo $result."<br>";
+//   return $result;
+// }
 
     $ya = 0;
     while($row = mysqli_fetch_array($obj)){
         $ya++;
-        $cost_wa;
-        echo $row['id']." aa ";
-        getCost($row['id']) > 0?$cost_wa = getCost($row['id']):$cost_wa = "0";
+        // $cost_wa;
+        // echo $row['id']." aa ";
+        // getCost($row['id']) > 0?$cost_wa = getCost($row['id']):$cost_wa = "0";
         echo'<tr>'.
             // '<td>'.$ya.'</td>'.
             // '<td>'.'<img src="img/test1.jpg">'.'</td>'.
@@ -157,11 +164,13 @@ function calCost($cost,$sale){
             '<td>'.$ya.'</td>'.
             '<td>'.'<img style="width:300px" src="'.$row['img'].'"></td>'.
             '<td>'.$row['p_name'].'</td>'.
-            '<td>'.$row['stock'].'</td>'.
-            '<td>'.$cost_wa.'</td>';  //query from product_cost where p_id = $row['id']  if() avg or 
+            '<td>'.$row['buy'].'</td>'.
+            '<td>'.$row['sale'].'</td>'.
+            '<td>'.$row['stock'].'</td>';
+            // '<td>'.$cost_wa.'</td>';  //query from product_cost where p_id = $row['id']  if() avg or 
 
 ?>
-                    <td>
+                    <td class="text-center">
                         <!--Product stock buy-->
                         <a href="./product_cost/cost.php?stock_name=<?php echo $row['p_name']?>" style="color:blue"> <!--param edit-->
                         <i class="fa fa-cart-shopping" aria-hidden="true"></i>Buy</a>&nbsp &nbsp
