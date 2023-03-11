@@ -34,7 +34,7 @@
       <div class="navbar-nav">
        <h5><a class="nav-link" href="./admin/main.php">Home</a></h5>
        <h5><a class="nav-link active" aria-current="page" href="#">General Ledger</a></h5>
-       <h5><a class="nav-link" href="../reportt.php">General Ledger</a></h5>
+       <h5><a class="nav-link" href="./report.php">Report</a></h5>
        <h5><a class="nav-link" href="../logout.php">Log out</a> </h5>
        <!-- <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> -->
       </div>
@@ -87,7 +87,7 @@
             while($row_expense = mysqli_fetch_array($cost_obj)){
               $e_sum += $row_expense['cost'];
                 echo'<tr>'.
-                  '<td> -Purchase of'.$row_expense['p_name'].'</td>'.
+                  '<td> -Purchase of '.$row_expense['p_name'].'</td>'.
                   '<td> </td>'.
                   '<td> '.$row_expense['qty'].' x '.$row_expense['cost_per_unit'].'</td>'.
                   '<td> </td>'.
@@ -101,7 +101,7 @@
               $r_sum += $row_revenues['sale'];
                 echo'<tr>'.
                   '<td> </td>'.
-                  '<td> -Sales of'.$row_revenues['p_name'].'</td>'.
+                  '<td> -Sales of '.$row_revenues['p_name'].'</td>'.
                   '<td> </td>'.
                   '<td> '.$row_revenues['qty'].' x '.$row_revenues['sale_per_unit'].'</td>'.
                   '<td> </td>'.
