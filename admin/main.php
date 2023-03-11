@@ -68,15 +68,28 @@
 include("./config_fifo.php");
 
 //No left No value for new product
-$str = "select p.id, p.p_name, img,"
-." COALESCE(sum(pc.qty),0) buy," 
-." COALESCE(sum(ps.qty),0) sale,"
-." COALESCE(sum(pc.qty)-sum(ps.qty),'Sold out') stock "
-."  from product p"
+// $str = "select p.id, p.p_name, img,"
+// ." COALESCE(sum(pc.qty),0) buy," 
+// ." COALESCE(sum(ps.qty),0) sale,"
+// ." COALESCE(sum(pc.qty)-sum(ps.qty),'Sold out') stock "
+// ."  from product p"
+// ." left join product_cost pc on p.id = pc.p_id "
+// ." left join product_sale ps on p.id = ps.p_id "
+// ."where p_name like '%$strKeyword%' group by p.id ";
+$str = "select c_id,c_name,c_img,buy, sale, (buy - sale) stock from "
+." (select p.id c_id, p.p_name c_name, img c_img, "
+." COALESCE(sum(pc.qty),0) buy "
+." from product p "
 ." left join product_cost pc on p.id = pc.p_id "
+." group by p.id ) as t_cost "
+." join "
+." (select p.id s_id, p.p_name, img,"
+." COALESCE(sum(ps.qty),0) sale "
+." from product p "
 ." left join product_sale ps on p.id = ps.p_id "
-."where p_name like '%$strKeyword%' group by p.id ";
-
+." group by p.id ) as t_sale"
+." on t_cost.c_id = t_sale.s_id "
+." where c_name like '%$strKeyword%' ";
 
 
 $obj = mysqli_query($conn,$str);
@@ -107,7 +120,7 @@ else
 }
 
 
-$str .=" order by id ASC LIMIT $Page_Start , $Per_Page";
+$str .=" order by c_id ASC LIMIT $Page_Start , $Per_Page";
 $obj  = mysqli_query($conn,$str);
 //page END
 
@@ -162,8 +175,8 @@ $obj  = mysqli_query($conn,$str);
             // '<td>'.'<img src="img/test1.jpg">'.'</td>'.
             // '<td>'.$row['id'].'</td>'.
             '<td>'.$ya.'</td>'.
-            '<td>'.'<img style="width:300px" src="'.$row['img'].'"></td>'.
-            '<td>'.$row['p_name'].'</td>'.
+            '<td>'.'<img style="width:300px" src="'.$row['c_img'].'"></td>'.
+            '<td>'.$row['c_name'].'</td>'.
             '<td>'.$row['buy'].'</td>'.
             '<td>'.$row['sale'].'</td>'.
             '<td>'.$row['stock'].'</td>';
