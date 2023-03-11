@@ -129,7 +129,7 @@
               </tr>
               </h5>    
               ';
-            }else{
+            }if($r_sum-$e_sum<0){
               echo '<h5>
               <tr>
               <td><h5>Cash Payment</h5></td>
