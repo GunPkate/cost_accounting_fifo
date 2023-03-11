@@ -26,10 +26,10 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
        <h5><a class="nav-link active" aria-current="page" href="./main.php">Home</a></h5>
-       <h5><a class="nav-link" href="#">General Ledger</a></h5>
+       <h5><a class="nav-link" href="../ledger.php">General Ledger</a></h5>
        <h5><a class="nav-link" href="../report.php">Report</a></h5>
        <h5><a class="nav-link" href="../logout.php">Log out</a> </h5>
-       <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+       <!-- <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> -->
       </div>
     </div>
   </div>

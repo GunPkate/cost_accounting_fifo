@@ -25,11 +25,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-       <h5><a class="nav-link active" aria-current="page" href="../main.php">Home</a></h5>
-       <h5><a class="nav-link" href="#">General Ledger</a></h5>
+       <h5><a class="nav-link" href="../main.php">Home</a></h5>
+       <h5><a class="nav-link" href="../../ledger.php">General Ledger</a></h5>
        <h5><a class="nav-link" href="../../report.php">Report</a></h5>
        <h5><a class="nav-link" href="../../logout.php">Log out</a> </h5>
-       <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+       <!-- <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> -->
       </div>
     </div>
   </div>
@@ -45,10 +45,12 @@
 
 <div class="container mt-4">
   <h4>
-    <form name="frmSearch" method="POST">
-      <input name="txt" type="text" value="<?=$strKeyword?>"/>
+    <!-- <form name="frmSearch" method="POST">
+      <input name="txt" type="text" value="
+      < ?= $strKeyword?>
+      "/>
       <input type="submit"/>
-    </form>
+    </form> -->
     <a href="./product_add/insert_product.php?stock_name=<?php echo $stock_name ?>" class="btn btn-primary" style="float:right;">Purchase</a>
     </h4><br>
   <table class="table table-hover">

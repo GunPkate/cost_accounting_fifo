@@ -25,8 +25,8 @@
     
     .cogs{
       background: #f9c823;  /* fallback for old browsers */
-      background: -webkit-linear-gradient(to bottom, #f9bc2c, #ee821a);  /* Chrome 10-25, Safari 5.1-6 */
-      background: linear-gradient(to bottom, #f9bc2c, #ee821a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */      
+      background: -webkit-linear-gradient(to bottom, #ffdd2c, #eed2da);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to bottom, #ffdDac, #efefaa); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */      
     }
 </style>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -37,11 +37,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-       <h5><a class="nav-link active" aria-current="page" href="./admin/main.php">Home</a></h5>
+       <h5><a class="nav-link" href="./admin/main.php">Home</a></h5>
        <h5><a class="nav-link" href="#">General Ledger</a></h5>
-       <h5><a class="nav-link" href="#">Report</a></h5>
+       <h5><a class="nav-link active" aria-current="page" href="#">Report</a></h5>
        <h5><a class="nav-link" href="../logout.php">Log out</a> </h5>
-       <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+       <!-- <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> -->
       </div>
     </div>
   </div>
@@ -62,7 +62,9 @@
       <tr>
         <th>Name</th>
         <th></th>
-        <th>Revenues</th>
+        <th></th>
+        <th></th>
+        <th class="text-right">Revenues</th>
 
       </tr>
     </thead>
@@ -82,14 +84,20 @@
                 echo'<tr>'.
                     '<td> -'.$row_revenues['p_name'].'</td>'.
                     '<td></td>'.
-                    '<td> '.$row_revenues['sale'].'</td>';
+                    '<td></td>'.
+                    '<td></td>'.
+                    '<td class="text-right"> '.$row_revenues['sale'].'</td>'.
+                    '<td></td>';
                 echo '</tr>';
             }
             echo '<h5>
                   <tr>
                   <td><h5>Total Revenues</h5></td>
                     <td></td>
-                    <td><h5>'.($r_sum).'</h5></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right"><h5>'.($r_sum).'</h5></td>
+                    <td></td>
                   </tr>
                   </h5>    
       </tbody>
@@ -131,16 +139,20 @@
             while($row_cogs = mysqli_fetch_array($obj_cogs)){
               $cogs_sum += $row_cogs['buy']*$row_cogs['cost'];
                 echo'<tr>'.
-                    '<td> -'.$row_cogs['p_name'].'</td>'.
+                '<td> -'.$row_cogs['p_name'].'</td>'.
+                    '<td></td>'.
                     '<td> -'.$row_cogs['wa_cost'].' x '.$row_cogs['buy'].' = '.'</td>'.
-                    '<td> -'.$row_cogs['wa_cost']*$row_cogs['buy'].'</td>';
+                    '<td class="text-right"> -'.$row_cogs['wa_cost']*$row_cogs['buy'].'</td>'.
+                    '<td></td>';
                 echo '</tr>';
             }
             echo '<h5>
                   <tr>
-                  <td><h5>Total Cost of Goods sold</h5></td>
-                    <td></td>
-                    <td><h5> -'.($cogs_sum).'</h5></td>
+                  <td><h5> Cost of Goods sold</h5></td>
+                  <td></td>
+                  <td></td>
+                  <td class="text-right"><h5> -'.($cogs_sum).'</h5></td>
+                  <td></td>
                   </tr>
                   </h5>';
 
@@ -148,7 +160,9 @@
                   <tr>
                     <td><h5>Total Gross Profit</h5></td>
                     <td></td>
-                    <td><h5>'.($r_sum-$cogs_sum).'</h5></td>
+                    <td></td>
+                    <td class="text-right"><h5>'.($r_sum-$cogs_sum).'</h5></td>
+                    <td></td>
                   </tr>
                   </h5>'; 
         ?>
