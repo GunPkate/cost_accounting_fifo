@@ -38,8 +38,8 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
        <h5><a class="nav-link active" aria-current="page" href="./admin/main.php">Home</a></h5>
-       <h5><a class="nav-link" href="#">Features</a></h5>
-       <h5><a class="nav-link" href="../report.php">Report</a></h5>
+       <h5><a class="nav-link" href="#">General Ledger</a></h5>
+       <h5><a class="nav-link" href="#">Report</a></h5>
        <h5><a class="nav-link" href="../logout.php">Log out</a> </h5>
        <h5><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
       </div>
@@ -69,23 +69,20 @@
     <tbody>
       <?php
         include("admin/config_fifo.php");
-        $str = "select p.id, p.p_name, ps.sale_per_unit as sale, ps.qty as ps_qty,"
-        ." pc.cost_per_unit as cost, pc.qty as pc_qty"
-        ."  from product p"
-        ."  join product_cost pc on p.id = pc.p_id "
-        ."  join product_sale ps on p.id = ps.p_id "
-        ." group by p.id ";
-        $r_obj  = mysqli_query($conn,$str);
+        $str_sale = " select p.p_name, ps.p_id, sum(ps.qty*sale_per_unit) sale  from product_sale ps "
+        ." join product p on p.id = ps.p_id"
+        ." group by p_id";
+        $r_obj  = mysqli_query($conn,$str_sale);
         //page END
         
         //Revenues
         $r_sum = 0;
             while($row_revenues = mysqli_fetch_array($r_obj)){
-              $r_sum += $row_revenues['ps_qty']*$row_revenues['sale'];
+              $r_sum += $row_revenues['sale'];
                 echo'<tr>'.
                     '<td> -'.$row_revenues['p_name'].'</td>'.
-                    '<td> '.$row_revenues['sale'].' x '.$row_revenues['ps_qty'].' = '.'</td>'.
-                    '<td> '.$row_revenues['ps_qty']*$row_revenues['sale'].'</td>';
+                    '<td></td>'.
+                    '<td> '.$row_revenues['sale'].'</td>';
                 echo '</tr>';
             }
             echo '<h5>
@@ -116,15 +113,27 @@
     <tbody>
     ';
 
-        $obj_cogs  = mysqli_query($conn,$str);
+    $str_cost = " select p.id, p.p_name,"
+    ." COALESCE(sum(pc.qty),0) buy,"
+    ." pc.cost_per_unit as cost,"
+    ." tc.totalcost as totalcost, "
+    ." (tc.totalcost/sum(pc.qty)) wa_cost"
+    ." from product p "
+    ." join product_cost pc on p.id = pc.p_id "
+    ." join (select pc.p_id,sum(pc.qty * pc.cost_per_unit ) as totalcost from product_cost pc group by p_id) tc on tc.p_id = pc.p_id"
+    ." group by p.id";
+    
+
+
+        $obj_cogs  = mysqli_query($conn,$str_cost);
         $cogs_sum = 0;
 
             while($row_cogs = mysqli_fetch_array($obj_cogs)){
-              $cogs_sum += $row_cogs['pc_qty']*$row_cogs['cost'];
+              $cogs_sum += $row_cogs['buy']*$row_cogs['cost'];
                 echo'<tr>'.
                     '<td> -'.$row_cogs['p_name'].'</td>'.
-                    '<td> -'.$row_cogs['cost'].' x '.$row_cogs['pc_qty'].' = '.'</td>'.
-                    '<td> -'.$row_cogs['pc_qty']*$row_cogs['cost'].'</td>';
+                    '<td> -'.$row_cogs['wa_cost'].' x '.$row_cogs['buy'].' = '.'</td>'.
+                    '<td> -'.$row_cogs['wa_cost']*$row_cogs['buy'].'</td>';
                 echo '</tr>';
             }
             echo '<h5>
