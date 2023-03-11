@@ -1,9 +1,10 @@
 <?php
-  // session_start();
-  // if( $_SESSION['username'] =="" ){
-  //   echo "<meta http-equiv='refresh' content='0;URL=../login.php'/>"; //wait 3 sec
-  // }
+  session_start();
+  if( $_SESSION['username'] =="" ){
+    echo "<meta http-equiv='refresh' content='0;URL=../../login.php'/>"; //wait 3 sec
+  }
 ?>
+
 
 
 <!DOCTYPE html>
