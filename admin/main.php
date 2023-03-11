@@ -68,8 +68,8 @@ include("./config_fifo.php");
 
 //No left No value for new product
 $str = "select p.id, p.p_name, img,sum(pc.qty)-sum(ps.qty) as stock ,sum(pc.qty)-sum(pc.qty) as inventory from product p"
-."  join product_cost pc on p.id = pc.p_id "
-."  join product_sale ps on p.id = ps.p_id "
+." left join product_cost pc on p.id = pc.p_id "
+." left join product_sale ps on p.id = ps.p_id "
 ."where p_name like '%$strKeyword%' group by p.id ";
 
 $obj = mysqli_query($conn,$str);
@@ -105,16 +105,20 @@ $obj  = mysqli_query($conn,$str);
 //page END
 
 function getCost($p_id){
-  // pass params from outside
   global $conn;
-
+  // $p_id = 1  ;
   $str2 = " select * from product_cost pc where p_id like '%$p_id%' order by date desc"; 
   $obj2 = mysqli_query($conn,$str2);
   
   $str3 = " select sum(qty) as qty from product_sale ps where p_id like '%$p_id%'"; 
   $obj3 = mysqli_query($conn,$str3);
   
-   calCost($obj2,$obj3);
+  // while($sale_qty = mysqli_fetch_array($obj3)){ 
+    //   echo  $sale_qty['qty']." "."<br>";
+    // }
+    
+    //WA weighted average
+    calCost($obj2,$obj3);
 }
 
 function calCost($cost,$sale){
@@ -143,22 +147,25 @@ function calCost($cost,$sale){
     $ya = 0;
     while($row = mysqli_fetch_array($obj)){
         $ya++;
-        $cost_wa = 0;
-        // echo $row['id']." aa ";
-
-        $cost_wa =  strval(getCost($row['id']));
-        if($row['stock'] > 0){
-          echo
-          '<tr>'.
-          '<td>'.$ya.'</td>'.
-          '<td>'.'<img style="width:300px" src="'.$row['img'].'"></td>'.
-          '<td>'.$row['p_name'].'</td>'.
-          '<td>'.$row['stock'].'</td>'.
-          '<td>'.$cost_wa.'</td>';  //query from product_cost where p_id = $row['id']  if() avg or 
-        }
+        $cost_wa;
+        echo $row['id']." aa ";
+        getCost($row['id']) > 0?$cost_wa = getCost($row['id']):$cost_wa = "0";
+        echo'<tr>'.
+            // '<td>'.$ya.'</td>'.
+            // '<td>'.'<img src="img/test1.jpg">'.'</td>'.
+            // '<td>'.$row['id'].'</td>'.
+            '<td>'.$ya.'</td>'.
+            '<td>'.'<img style="width:300px" src="'.$row['img'].'"></td>'.
+            '<td>'.$row['p_name'].'</td>'.
+            '<td>'.$row['stock'].'</td>'.
+            '<td>'.$cost_wa.'</td>';  //query from product_cost where p_id = $row['id']  if() avg or 
 
 ?>
                     <td>
+                        <!--Product stock-->
+                        <a href="./product_cost/cost.php?stock_name=<?php echo $row['p_name']?>" style="color:blue"> <!--param edit-->
+                        <i class="fa fa-pencil" aria-hidden="true"></i>Stock Add</a>&nbsp
+                        <!--Product stock-->
                         <a href="./product_add/edit_product.php?edit=<?php echo $row['id']?>" style="color:green"> <!--param edit-->
                         <i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp
                         <a href="./product_add/delete_product.php?del=<?php echo $row['id']?>" style="color:red" onclick="return confirm('Are you sure want to delete this record <?= $row['id']?>')">

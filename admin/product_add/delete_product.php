@@ -5,7 +5,7 @@ include("../config_fifo.php");
 
 
     $str = "delete from product where id = '$delete_id'";
-
+    echo $str;
     $obj = mysqli_query($conn,$str);
 
     if($obj){
