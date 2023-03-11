@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"/>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
@@ -162,14 +162,18 @@ function calCost($cost,$sale){
 
 ?>
                     <td>
-                        <!--Product stock-->
+                        <!--Product stock buy-->
                         <a href="./product_cost/cost.php?stock_name=<?php echo $row['p_name']?>" style="color:blue"> <!--param edit-->
-                        <i class="fa fa-pencil" aria-hidden="true"></i>Stock Add</a>&nbsp
-                        <!--Product stock-->
-                        <a href="./product_add/edit_product.php?edit=<?php echo $row['id']?>" style="color:green"> <!--param edit-->
-                        <i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp
+                        <i class="fa fa-cart-shopping" aria-hidden="true"></i>Buy</a>&nbsp &nbsp
+                        <!--Product stock buy-->
+                        <!--Product stock sale-->
+                        <a href="./product_sale/sale.php?stock_name=<?php echo $row['p_name']?>" style="color:green"> <!--param edit-->
+                        <i class="fa fa-boxes-stacked" aria-hidden="true"></i>Sale</a>&nbsp &nbsp
+                        <!--Product stock sale-->
+                        <a href="./product_add/edit_product.php?edit=<?php echo $row['id']?>" style="color:salmon"> <!--param edit-->
+                        <i class="fa fa-pencil" aria-hidden="true"></i>Edit</a>&nbsp &nbsp
                         <a href="./product_add/delete_product.php?del=<?php echo $row['id']?>" style="color:red" onclick="return confirm('Are you sure want to delete this record <?= $row['id']?>')">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        <i class="fa fa-trash" aria-hidden="true">Delete</i>
                         </a>
                     </td>
 

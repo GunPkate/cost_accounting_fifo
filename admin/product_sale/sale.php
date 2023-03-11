@@ -56,6 +56,7 @@
       <tr>
         <th>Id</th>
         <th>Name</th>
+        <th>Sale Per Unit</th>
         <th>Stock</th>
         <th>Date</th>
         <th>Action</th>
@@ -67,8 +68,8 @@
 include("../config_fifo.php");
 
 //No left No value for new product
-$str = "select p.id, p.p_name, pc.id as pc_id, pc.qty as stock , pc.date as date from product p"
-." join product_cost pc on p.id = pc.p_id "
+$str = "select p.id, p.p_name, ps.id as ps_id,ps.sale_per_unit as price, ps.qty as stock , ps.date as date from product p"
+." join product_sale ps on p.id = ps.p_id "
 ." where p_name like '%$stock_name%'  ";
 // ."  where date like '%$strKeyword%'  ";
 // ."  order by pc.date desc" ;
@@ -113,15 +114,16 @@ $obj  = mysqli_query($conn,$str);
 
           echo
           '<tr>'.
-          '<td>'.$row['pc_id'].'</td>'.
+          '<td>'.$row['ps_id'].'</td>'.
           '<td>'.$row['p_name'].'</td>'.
+          '<td>'.$row['price'].'</td>'.
           '<td>'.$row['stock'].'</td>'.
           '<td>'.$row['date'].'</td>';
 ?>
                     <td>
-                        <!-- <a href="./product_add/edit_product.php?edit=<?php echo $row['id']?>" style="color:green">
+                        <!-- <a href="./product_add/edit_product.php?edit=<?php echo $row['id']?>" style="color:green"> 
                         <i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp -->
-                        <a href="./product_add/delete_product.php?del=<?php echo $row['pc_id']?>" style="color:red" onclick="return confirm('Are you sure want to delete this record <?= $row['pc_id']?>')">
+                        <a href="./product_add/delete_product.php?del=<?php echo $row['ps_id']?>" style="color:red" onclick="return confirm('Are you sure want to delete this record <?= $row['ps_id']?>')">
                         <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </td>
