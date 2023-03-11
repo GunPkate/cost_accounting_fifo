@@ -1,0 +1,133 @@
+drop database tni_fifo;
+create DATABASE tni_fifo;
+
+create table product (
+	id integer not null auto_increment,
+	p_name varchar(20) not null,
+	PRIMARY KEY (id)
+);
+
+alter table product add column img varchar(50);
+insert into product (p_name,img) values('Vitamin C','img/1678521404vitC.png');
+insert into product (p_name) values('First Aid Kit');
+insert into product (p_name,img) values('moderna','img/1678403746moderna..jpg');
+insert into product (p_name,img) values('pfizer','img/1678499414pfizer.jpg');
+
+create table product_cost (
+	id integer not null auto_increment,
+	p_id integer,
+	qty int not null,
+	cost_per_unit float not null,
+	date timestamp,
+	PRIMARY KEY (id),
+	FOREIGN KEY (p_id) REFERENCES product(id)
+	ON DELETE CASCADE
+);
+
+create table product_sale (
+	id integer not null auto_increment,
+	p_id integer,
+	qty int not null,
+	sale_per_unit float not null,
+	date timestamp,
+	PRIMARY KEY (id),
+	FOREIGN KEY (p_id) REFERENCES product(id)
+	ON DELETE CASCADE
+);
+
+create TABLE admin (id integer,username varchar(20), password varchar(20));
+insert into admin (username,password) values('admin','admin');
+
+insert into product_cost (p_id,cost_per_unit,qty) values(1,30,20);
+insert into product_cost(p_id,cost_per_unit,qty) values(1,12,10);
+insert into product_sale (p_id,sale_per_unit,qty) values(1,20,10);
+insert into product_sale (p_id,sale_per_unit,qty) values(1,15,10);
+
+insert into product_cost (p_id,cost_per_unit,qty) values(2,220,50);
+insert into product_sale (p_id,sale_per_unit,qty) values(2,100,30);
+
+insert into product_cost (p_id,cost_per_unit,qty) values(3,220,50);
+insert into product_sale (p_id,sale_per_unit,qty) values(3,490,30);
+insert into product_sale (p_id,sale_per_unit,qty) values(3,500,20);
+
+insert into product_cost (p_id,cost_per_unit,qty) values(4,250,60);
+insert into product_cost (p_id,cost_per_unit,qty) values(4,230,30);
+insert into product_sale (p_id,sale_per_unit,qty) values(4,690,40);
+
+
+//main dont join double value  use separate table
+
+select c_id,c_name,c_img,buy, sale, (buy - sale) stock from
+(select p.id c_id, p.p_name c_name, img c_img,
+COALESCE(sum(pc.qty),0) buy
+from product p 
+left join product_cost pc on p.id = pc.p_id
+group by p.id ) as t_cost
+join
+(select p.id s_id, p.p_name, img,
+COALESCE(sum(ps.qty),0) sale
+from product p 
+left join product_sale ps on p.id = ps.p_id 
+group by p.id ) as t_sale
+on t_cost.c_id = t_sale.s_id
+
+
+//main dont join double value
+
+//main
+select p.id, p.p_name, ps.sale_per_unit as sale, ps.qty as ps_qty,
+         pc.cost_per_unit as cost, pc.qty as pc_qty
+          from product p
+          join product_cost pc on p.id = pc.p_id 
+          join product_sale ps on p.id = ps.p_id 
+         group by p.id;
+
+//Dont use
+ select p.id, p.p_name,
+         COALESCE(sum(pc.qty),0) buy,
+         pc.cost_per_unit as cost,
+         tc.totalcost as totalcost ,
+         (tc.totalcost/sum(pc.qty)) wa_cost
+          from product p
+          join product_cost pc on p.id = pc.p_id 
+          join (select pc.p_id,sum(pc.qty * pc.cost_per_unit ) as totalcost from product_cost pc group by p_id) tc on tc.p_id = pc.p_id
+         group by p.id ;
+//Dont use
+
+
+// report
+ select p.id, p.p_name,
+         COALESCE(sum(ps.qty),0) sale,
+         ps.sale_per_unit as price_s, 
+         COALESCE(sum(pc.qty),0) buy,
+         pc.cost_per_unit as cost,
+         tc.totalcost as totalcost 
+          from product p
+          join product_cost pc on p.id = pc.p_id 
+          join product_sale ps on p.id = ps.p_id 
+          join (select pc.p_id,sum(pc.qty * pc.cost_per_unit ) as totalcost from product_cost pc group by p_id) tc on tc.p_id = pc.p_id
+         group by p.id ;
+
+
+select p.p_name, ps.p_id, sum(ps.qty*sale_per_unit) sale  from product_sale ps 
+         join product p on p.id = ps.p_id
+         group by p_id;
+//report
+
+//Ledger
+//Dr
+select p.p_name, pc.p_id,
+pc.qty, pc.cost_per_unit,
+pc.qty*cost_per_unit cost
+from product_cost pc 
+join product p on p.id = pc.p_id
+
+//Cr
+select p.p_name, ps.p_id,
+ps.qty, ps.sale_per_unit,
+ps.qty*sale_per_unit sale
+from product_sale ps 
+join product p on p.id = ps.p_id;
+
+
+//Ledger
