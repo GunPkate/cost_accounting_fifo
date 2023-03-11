@@ -179,22 +179,22 @@ $obj  = mysqli_query($conn,$str);
             '<td>'.$row['c_name'].'</td>'.
             '<td>'.$row['buy'].'</td>'.
             '<td>'.$row['sale'].'</td>'.
-            '<td>'.$row['stock'].'</td>';
+            '<td>'.($row['stock']>0?$row['stock']:'Sold Out').'</td>';
             // '<td>'.$cost_wa.'</td>';  //query from product_cost where p_id = $row['id']  if() avg or 
 
 ?>
                     <td class="text-center">
                         <!--Product stock buy-->
-                        <a href="./product_cost/cost.php?stock_name=<?php echo $row['p_name']?>" style="color:blue"> <!--param edit-->
+                        <a href="./product_cost/cost.php?stock_name=<?php echo $row['c_name']?>" style="color:blue"> <!--param edit-->
                         <i class="fa fa-cart-shopping" aria-hidden="true"></i>Buy</a>&nbsp &nbsp
                         <!--Product stock buy-->
                         <!--Product stock sale-->
-                        <a href="./product_sale/sale.php?stock_name=<?php echo $row['p_name']?>" style="color:green"> <!--param edit-->
+                        <a href="./product_sale/sale.php?stock_name=<?php echo $row['c_name']?>" style="color:green"> <!--param edit-->
                         <i class="fa fa-boxes-stacked" aria-hidden="true"></i>Sale</a>&nbsp &nbsp
                         <!--Product stock sale-->
-                        <a href="./product_add/edit_product.php?edit=<?php echo $row['id']?>" style="color:salmon"> <!--param edit-->
+                        <a href="./product_add/edit_product.php?edit=<?php echo $row['c_id']?>" style="color:salmon"> <!--param edit-->
                         <i class="fa fa-pencil" aria-hidden="true"></i>Edit</a>&nbsp &nbsp
-                        <a href="./product_add/delete_product.php?del=<?php echo $row['id']?>" style="color:red" onclick="return confirm('Are you sure want to delete this record <?= $row['id']?>')">
+                        <a href="./product_add/delete_product.php?del=<?php echo $row['c_id']?>" style="color:red" onclick="return confirm('Are you sure want to delete this record <?= $row['id']?>')">
                         <i class="fa fa-trash" aria-hidden="true">Delete</i>
                         </a>
                     </td>

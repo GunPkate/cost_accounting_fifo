@@ -7,7 +7,7 @@ $pname = $_POST['name'];
 //echo $pname1."<br>".$lname1;
 include("../../config_fifo.php");
 // $p_id = "CAST(SELECT distinct * FROM product_cost pc join product p on p.id = pc.p_id where p.p_name like '%$pname%' AS int)";
-$p_id = "(SELECT   pc.p_id FROM product_cost pc join product p on p.id = pc.p_id where p.p_name like '%".$pname."%' Limit 1)";
+$p_id = "(SELECT p.id FROM product p where p_name like '%".$pname."%')";
 $str = "INSERT INTO product_cost (p_id,cost_per_unit,qty,"."date".") VALUES($p_id,$pcost,$pqty,'$pdate')";
 echo $str."<br>";
 $obj = mysqli_query($conn,$str);
