@@ -95,6 +95,14 @@
                   '<td> </td>';
                 echo '</tr>';
             }
+            echo'<tr>'.
+            '<td> </td>'.
+            '<td> </td>'.
+            '<td> </td>'.
+            '<td> </td>'.
+            '<td class="text-right"><h5> '.number_format($e_sum,2).'</h5></td>'.
+            '<td> </td>'.
+            '</tr>';
 
             $r_sum =0;
             while($row_revenues = mysqli_fetch_array($r_obj)){
@@ -108,6 +116,14 @@
                   '<td class="text-right"> '.number_format($row_revenues['sale'],2).'</td>';
                 echo '</tr>';
             }
+            echo'<tr>'.
+            '<td> </td>'.
+            '<td> </td>'.
+            '<td> </td>'.
+            '<td> </td>'.
+            '<td> </td>'.
+            '<td class="text-right"><h5> '.number_format($r_sum,2).'</h5></td>'.
+            '</tr>';
 
             echo '<h5>
             <tr>
