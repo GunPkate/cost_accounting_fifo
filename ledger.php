@@ -91,7 +91,7 @@
                   '<td> </td>'.
                   '<td> '.$row_expense['qty'].' x '.$row_expense['cost_per_unit'].'</td>'.
                   '<td> </td>'.
-                  '<td> '.$row_expense['cost'].'</td>'.
+                  '<td class="text-right"> '.number_format($row_expense['cost'],2).'</td>'.
                   '<td> </td>';
                 echo '</tr>';
             }
@@ -105,55 +105,195 @@
                   '<td> </td>'.
                   '<td> '.$row_revenues['qty'].' x '.$row_revenues['sale_per_unit'].'</td>'.
                   '<td> </td>'.
-                  '<td> '.$row_revenues['sale'].'</td>';
+                  '<td class="text-right"> '.number_format($row_revenues['sale'],2).'</td>';
                 echo '</tr>';
             }
+
             echo '<h5>
-                  <tr>
-                  <td><h5>Total Expense</h5></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><h5>'.($e_sum).'</h5></td>
-                  </tr>
-                  </h5>    
-                  ';
-            if($r_sum-$e_sum>0){
-              echo '<h5>
-              <tr>
-              <td><h5>Cash Received</h5></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><h5>'.($r_sum-$e_sum).'</h5></td>
-              </tr>
-              </h5>    
-              ';
-            }if($r_sum-$e_sum<0){
-              echo '<h5>
-              <tr>
-              <td><h5>Cash Payment</h5></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><h5>'.($e_sum-$r_sum).'</h5></td>
-              </tr>
-              </h5>    
-              echo ';
+            <tr>
+            <td><h5></h5></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            </h5>    
+            ';
+            echo '<h5>
+            <tr>
+            <td><h5>Inventory</h5></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="text-right"><h5>'.number_format(($e_sum),2).'</h5></td>
+              <td></td>
+            </tr>
+            </h5>    
+            ';
+            $buy_vat7 = ($e_sum)*0.07;
+            echo '<h5>
+            <tr>
+            <td><h5>Buy Tax Vat 7%</h5></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="text-right"><h5>'.number_format(($buy_vat7),2).'</h5></td>
+              <td></td>
+            </tr>
+            </h5>    
+            ';
+            echo '<h5>
+            <tr>
+            <td></td>
+            <td><h5>Cash Payment</h5></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="text-right"><h5>'.number_format(($e_sum+$buy_vat7),2).'</h5></td>
+            </tr>
+            </h5>    
+            ';
+            
+            echo '<h5>
+            <tr>
+            <td><h5></h5></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            </h5>    
+            ';
+            //Cost of Goods Sold
+            $str_wa_cost = "  select  cogs_id, p_name, buy, wa_cost, sum_qty from"
+                    ." (select p.id cogs_id, p.p_name,"
+                    ." COALESCE(sum(pc.qty),0) buy,"
+                    ." pc.cost_per_unit as cost,"
+                    ." tc.totalcost as totalcost ,"
+                    ." (tc.totalcost/sum(pc.qty)) wa_cost"
+                    ." from product p"
+                    ." join product_cost pc on p.id = pc.p_id" 
+                    ." join (select pc.p_id,sum(pc.qty * pc.cost_per_unit ) as totalcost from product_cost pc group by p_id) tc on tc.p_id = pc.p_id"
+                    ." group by p.id ) as cogs "
+                    ." join  "
+                    ." (select p_id sale_id, sum(ps.qty) sum_qty from product_sale ps group by ps.p_id ) as sale_qty on cogs.cogs_id = sale_qty.sale_id";
+            $wa_cost_obj = mysqli_query($conn,$str_wa_cost);
+            //Cost of Goods Sold
+
+
+            $cogs_sum = 0;
+            while($row_cogs = mysqli_fetch_array($wa_cost_obj)){
+              $cogs_sum += $row_cogs['sum_qty'] * $row_cogs['wa_cost'];
+                echo'<tr>'.
+                '<td> -'.$row_cogs['p_name'].'</td>'.
+                '<td class="text-right"> -'.$row_cogs['wa_cost']*$row_cogs['buy']." / ".$row_cogs['buy']."= COGS ".'</td>'.
+                '<td class="text-right">'.number_format($row_cogs['wa_cost'],2).'</td>'.
+                '<td class="text-right">'.number_format($row_cogs['sum_qty'],2).'</td>'.
+                '<td class="text-right">'.number_format($row_cogs['sum_qty'] * $row_cogs['wa_cost'],2).'</td>'.
+                '<td></td>'.
+                    '<td></td>';
+                echo '</tr>';
             }
 
             echo '<h5>
                   <tr>
-                  <td><h5>Total Revenues</h5></td>
+                  <td><h5>Cost of Goods Sold</h5></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                    <td><h5>'.($r_sum).'</h5></td>
+                    <td class="text-right"><h5>'.number_format(($cogs_sum),2).'</h5></td>
                   </tr>
                   </h5>    
-                  
+                  ';
+            echo '<h5>
+                  <tr>
+                  <td><h5>Inventory</h5></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right"><h5>'.number_format(($cogs_sum),2).'</h5></td>
+                  </tr>
+                  </h5>';
+            echo '<h5>
+                  <tr>
+                  <td><h5></h5></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  </h5>    
+                  ';
+            $sale_vat7 = $r_sum*0.07;
+            echo '<h5>
+                  <tr>
+                  <td><h5>Cash Received</h5></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right"><h5>'.number_format(($r_sum+$sale_vat7),2).'</h5></td>
+                    <td></td>
+                  </tr>
+                  </h5>    
+                  ';
+
+
+            // if($r_sum-$e_sum>0){
+            //   echo '<h5>
+            //   <tr>
+            //   <td><h5>Cash Received</h5></td>
+            //     <td></td>
+            //     <td></td>
+            //     <td></td>
+            //     <td><h5>'.($r_sum-$e_sum).'</h5></td>
+            //   </tr>
+            //   </h5>    
+            //   ';
+            // }if($r_sum-$e_sum<0){
+            //   echo '<h5>
+            //   <tr>
+            //   <td><h5>Cash Payment</h5></td>
+            //     <td></td>
+            //     <td></td>
+            //     <td></td>
+            //     <td></td>
+            //     <td><h5>'.($e_sum-$r_sum).'</h5></td>
+            //   </tr>
+            //   </h5>    
+            //   echo ';
+            // }
+
+            echo '<h5>
+                  <tr>
+                  <td><h5>Sale</h5></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right"><h5>'.number_format(($r_sum),2).'</h5></td>
+                  </tr>
+                  </h5>';
+            echo '<h5>
+                  <tr>
+                  <td><h5>Sale Tax 7%</h5></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right"><h5>'.number_format(($sale_vat7),2).'</h5></td>
+                  </tr>
+                  </h5>';  
+            echo '<h5>
+                  <tr>
+                  <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  </h5>  
       </tbody>
       </table>';
       ?>  
