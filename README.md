@@ -1,5 +1,5 @@
 # cost_accounting_weightedavg
-https://gundash1.medium.com/php-weighted-average-accounting-88bfb3cf6211
+https://gundash1.medium.com/php-weighted-average-accounting-88bfb3cf6211 \
 Example of the WAC Method
 At the beginning of its January 1 fiscal year, a company reported a beginning inventory of 300 units at a cost of $100 per unit. Over the first quarter, the company made the following purchases:
 
