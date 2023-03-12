@@ -14,7 +14,7 @@ End of March sales of 70 units \
 ![image](https://user-images.githubusercontent.com/77183620/224524722-e552b83e-85ed-4fb5-8b40-c9c1f06119f5.png)
 https://corporatefinanceinstitute.com/resources/accounting/weighted-average-cost-method/
 
-![image](https://user-images.githubusercontent.com/77183620/224523559-90a8b693-5fc1-48dc-a9e7-376458c41b5f.png | width=480px)
-![image](https://user-images.githubusercontent.com/77183620/224523570-4940054e-c95b-4fdd-af82-ac906feeea4c.png =350x350)
-![image](https://user-images.githubusercontent.com/77183620/224524696-155a6ba8-de42-4e21-8f03-e5278397eae3.png =350x350)
+![image](https://user-images.githubusercontent.com/77183620/224523559-90a8b693-5fc1-48dc-a9e7-376458c41b5f.png)
+![image](https://user-images.githubusercontent.com/77183620/224523570-4940054e-c95b-4fdd-af82-ac906feeea4c.png)
+![image](https://user-images.githubusercontent.com/77183620/224524696-155a6ba8-de42-4e21-8f03-e5278397eae3.png)
 
